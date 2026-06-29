@@ -42,13 +42,19 @@ jobs:
       - name: Sync Capacitor Web Assets to Android
         run: npx cap sync android
 
+      - name: Fix line endings in Gradlew (CRLFs)
+        run: sed -i -e 's/\r$//' android/gradlew
+
       - name: Make Gradle Wrapper Executable
         run: chmod +x android/gradlew
+
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses || true
 
       - name: Build Android APK (Debug)
         run: |
           cd android
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Locate and Verify APK
         run: |

@@ -42,23 +42,16 @@ jobs:
       - name: Sync Capacitor Web Assets to Android
         run: npx cap sync android
 
-      - name: Download clean Gradle Wrapper JAR
+      - name: Generate clean Gradle Wrapper
         run: |
-          mkdir -p android/gradle/wrapper
-          curl -sSLo android/gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.2.1/gradle/wrapper/gradle-wrapper.jar
+          cd android
+          gradle wrapper --gradle-version 8.2.1
 
       - name: Fix line endings in Gradlew (CRLFs)
         run: sed -i -e 's/\r$//' android/gradlew
 
       - name: Make Gradle Wrapper Executable
         run: chmod +x android/gradlew
-
-      - name: Diagnostics - Print Environment Info
-        run: |
-          echo "=== Java Version ==="
-          java -version
-          echo "=== Gradle Version ==="
-          cd android && ./gradlew --version
 
       - name: Build Android APK (Debug)
         env:
